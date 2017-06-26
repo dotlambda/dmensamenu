@@ -9,9 +9,15 @@ meals = []
 
 page = requests.get('http://rolf-schneider.net/mensa/').text
 html = BeautifulSoup(page, 'html.parser')
-for td in html.body.find_all(id='output', text='D'):
-    if td.string == 'D':
-        meals.append(td.parent.find(id='meal').text)
+for tr in html.body.table.find_all('tr'):
+    if (tr.find('td')):
+        text = ''
+        text += tr.find('td', id='output').text
+        text += ' ' * (5 - len(text))
+        text += tr.find('td', id='euro').text + '€'
+        text += ' ' * (12 - len(text))
+        text += tr.find('td', id='meal').text
+        meals.append(text)
 
 p = Popen(['dmenu', '-l', str(len(meals))], stdin=PIPE)
 p.communicate(input=str.encode('\n'.join(meals)))
