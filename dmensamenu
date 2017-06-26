@@ -1,0 +1,17 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -i python3 -p python3Packages.requests python3Packages.beautifulsoup4
+
+import requests
+from bs4 import BeautifulSoup
+from subprocess import Popen, PIPE
+
+meals = []
+
+page = requests.get('http://rolf-schneider.net/mensa/').text
+html = BeautifulSoup(page, 'html.parser')
+for td in html.body.find_all(id='output', text='D'):
+    if td.string == 'D':
+        meals.append(td.parent.find(id='meal').text)
+
+p = Popen(['dmenu', '-l', str(len(meals))], stdin=PIPE)
+p.communicate(input=str.encode('\n'.join(meals)))
