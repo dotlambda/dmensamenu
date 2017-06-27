@@ -1,8 +1,8 @@
 dmensamenu
 ==========
 
-Print Heidelberg canteen menus using `dmenu`.
-The menu is fetched from http://stw.uni-heidelberg.de/de/speiseplan.
+Print canteen menus using `dmenu`.
+The menus is fetched from http://openmensa.org/.
 
 Requirements
 ------------
@@ -13,21 +13,25 @@ If you wish to use it with something else like Rofi, send in a pull request.
 Installation
 ------------
 
-    $ git clone https://github.com/dotlambda/dmensamenu.git
-    $ cd dmensamenu
-    $ pip install --user .
+    $ pip install --user git+https://github.com/dotlambda/dmensamenu.git
 
 Usage
 -----
 
-    $ dmensamenu canteen-name
+    $ dmensamenu id
 
-where *canteen-name* is one of
+where *id* is the OpenMensa canteen ID, e.g.
 
-* INF
-* Marstall
-* Triplex
+* 279 for Heidelberg INF
+* 280 for Heidelberg Marstall
+* 281 for Heidelberg Triplex
 
 You can even pass extra arguments to dmenu:
 
-    $ dmensamenu Marstall -nb \#101b2a -nf \#dcdccc -sb \#dcdccc -sf \#101b2a -fn "Fira Mono"
+    $ dmensamenu --dmenu "dmenu -l \$lines -nb \#101b2a -nf \#dcdccc -sb \#dcdccc -sf \#101b2a -fn 'Fira Mono'" 280 
+
+See
+
+    $ dmensamenu --help
+
+for all available options.
