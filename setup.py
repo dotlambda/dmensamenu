@@ -20,7 +20,7 @@ setup(
     ],
 
     packages=['dmensamenu'],
-    install_requires=['beautifulsoup4', 'requests'],
+    install_requires=['requests'],
 
     python_requires='>=3',
 

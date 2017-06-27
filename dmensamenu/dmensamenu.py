@@ -1,7 +1,6 @@
 import argparse
 from argparse import RawTextHelpFormatter
 import requests
-from datetime import datetime, date, timedelta
 import os
 from subprocess import Popen, PIPE
 
