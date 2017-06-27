@@ -1,4 +1,4 @@
-import sys
+import argparse
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, date, timedelta
@@ -43,20 +43,26 @@ def getmeals(canteen, day):
         meal[1] += ' ' * (maxpricelen - len(meal[1]))
     return ['  '.join(meal) for meal in meals]
 
-def showmeals(canteen, day, meals):
+def showmeals(canteen, day, meals, dmenuargs):
     # remaining command line args are passed to dmenu
-    p = Popen(['dmenu', '-p', canteen + ' ' + day.strftime('%d.%m.%Y'), '-l', str(len(meals))] + sys.argv[2:], stdin=PIPE)
+    p = Popen(['dmenu', '-p', canteen + ' ' + day.strftime('%d.%m.%Y'), '-l', str(len(meals))] + dmenuargs, stdin=PIPE)
     p.communicate(input=str.encode('\n'.join(meals)))
 
 def main():
-    canteen = sys.argv[1]
+    parser = argparse.ArgumentParser(description='Show today\'s canteen menu.')
+    parser.add_argument('canteen', type=str,
+                        help='the canteen whose menu to show',
+                        choices=['INF', 'Marstall', 'Triplex'])
+    parser.add_argument('dmenuargs', metavar='...', nargs=argparse.REMAINDER,
+                        help='Any additional arguments are passed on to dmenu.')
+    args = parser.parse_args()
 
     daytoshow = date.today()
-    if datetime.now().hour >= CLOSING[canteen]: # if canteen is already closed, show tomorrow's menu instead
+    if datetime.now().hour >= CLOSING[args.canteen]: # if canteen is already closed, show tomorrow's menu instead
         daytoshow += timedelta(days=1)
 
-    meals = getmeals(canteen, daytoshow)
-    showmeals(canteen, daytoshow, meals)
+    meals = getmeals(args.canteen, daytoshow)
+    showmeals(args.canteen, daytoshow, meals, args.dmenuargs)
 
 if __name__ == '__main__':
     main()
