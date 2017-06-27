@@ -26,7 +26,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'dmensamenu=dmensamenu:main',
+            'dmensamenu=dmensamenu.dmensamenu:main',
         ],
     }
 )
