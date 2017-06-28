@@ -4,6 +4,8 @@ import requests
 import os
 from subprocess import Popen, PIPE
 import sys
+import time
+import datetime
 
 def getmenu(canteen, day=None):
     if day is None:
@@ -85,6 +87,8 @@ def main():
                         help='Openmensa.org canteen ID.'
                             +' If no ID is given, a menu for selecting from available canteens is shown.'
                             +' If multiple IDs are given, only those will be available for selection.')
+    parser.add_argument('-f', '--forecast', action='store_true',
+                        help='When it\'s after 3pm, show tomorrow\'s canteen menu.')
     parser.add_argument('-s', '--search', action='store_true',
                         help='Search for a canteen.'
                             +'\nThe selected canteen\'s ID will be printed to stdout.')
@@ -104,7 +108,11 @@ def main():
     else:
         canteen = args.id[0]
     if canteen is not None and not args.search:
-        meals = getmenu(canteen)
+        day = None
+        if args.forecast and time.localtime().tm_hour > 14:
+            day = datetime.date.today() + datetime.timedelta(days=1)
+        
+        meals = getmenu(canteen, day)
         menu = formatmenu(meals)
         showmenu(menu, args.dmenu)
     
