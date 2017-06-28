@@ -1,14 +1,12 @@
 from setuptools import setup, find_packages
 
-
 with open('README.md') as f:
     long_description = f.read()
 
-
 setup(
     name='dmensamenu',
-    version='0.0.1',
-    description='Print Heidelberg INF canteen menu using dmenu',
+    version='1.0.0',
+    description='Print canteen menus using dmenu and OpenMensa',
     long_description=long_description,
     url='https://github.com/dotlambda/dmensamenu',
     author='Robert Schütz',

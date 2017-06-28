@@ -93,7 +93,7 @@ def main():
                             +' Can be used to pass custom parameters to dmenu.'
                             +' The shell variable $lines will be set to the number of items on the menu.')
     parser.add_argument('-v', '--version', action='version',
-                        version='dmensamenu-0.0.1', help="Show version number and exit.")
+                        version='dmensamenu-1.0.0', help="Show version number and exit.")
     parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
                         help='Show this help message and exit.')
     args = parser.parse_args()
