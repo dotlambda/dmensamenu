@@ -20,11 +20,9 @@ Usage
 
     $ dmensamenu id
 
-where *id* is the OpenMensa canteen ID, e.g.
-
-* *279* for Heidelberg INF
-* *280* for Heidelberg Marstall
-* *281* for Heidelberg Triplex
+where *id* is the OpenMensa canteen ID.
+If you don't know yours, just use `dmensamenu --search` and search for it.
+After pressing Return, the ID will be printed to stdout.
 
 You can even pass extra arguments to dmenu:
 
