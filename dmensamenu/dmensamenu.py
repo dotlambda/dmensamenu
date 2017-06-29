@@ -1,21 +1,21 @@
 import argparse
-from argparse import RawTextHelpFormatter
+import re
+from datetime import datetime
 import requests
 import os
 from subprocess import Popen, PIPE
-import sys
 
-def getmenu(canteen, day=None):
-    if day is None:
-        days = requests.get('http://openmensa.org/api/v2/canteens/{}/days'.format(canteen)).json()
-        for day_ in days:
-            if day_['closed'] == False:
-                daystring = day_['date']
-                break
-    else:
-        daystring = day.strftime('%Y-%m-%d')
-    meals = requests.get('http://openmensa.org/api/v2/canteens/{}/days/{}/meals'.format(canteen, daystring)).json()
-    return meals
+def getmenu(canteen, closes_at):
+    days = requests.get('http://openmensa.org/api/v2/canteens/{}/days'.format(canteen)).json()
+
+    # skip today if canteen is already closed
+    if closes_at and datetime.now().time() > closes_at.time():
+        days = days[1:] if len(days) else []
+
+    for day in days:
+        if day['closed'] == False:
+            return requests.get('http://openmensa.org/api/v2/canteens/{}/days/{}/meals'.format(canteen, day['date'])).json()
+    return [] # no open day found
 
 def formatmenu(meals):
     menu = []
@@ -85,6 +85,9 @@ def main():
                         help='Openmensa.org canteen ID.'
                             +' If no ID is given, a menu for selecting from available canteens is shown.'
                             +' If multiple IDs are given, only those will be available for selection.')
+    parser.add_argument('-c', '--closes-at', metavar='hh:mm',
+                        type=lambda string: datetime.strptime(string, '%H:%M'),
+                        help='Show menu of the next open day after hh:mm.')
     parser.add_argument('-s', '--search', action='store_true',
                         help='Search for a canteen.'
                             +'\nThe selected canteen\'s ID will be printed to stdout.')
@@ -104,7 +107,7 @@ def main():
     else:
         canteen = args.id[0]
     if canteen is not None and not args.search:
-        meals = getmenu(canteen)
+        meals = getmenu(canteen, args.closes_at)
         menu = formatmenu(meals)
         showmenu(menu, args.dmenu)
     
