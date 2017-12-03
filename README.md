@@ -13,6 +13,10 @@ If you wish to use it with something else like Rofi, send in a pull request.
 Installation
 ------------
 
+### From your package repo
+[![Packaging status](https://repology.org/badge/vertical-allrepos/dmensamenu.svg)](https://repology.org/metapackage/dmensamenu)
+
+### From source
     $ pip install --user git+https://github.com/dotlambda/dmensamenu.git
 
 Usage
