@@ -104,7 +104,7 @@ def main():
         canteens = getcanteens(args.ID, args.city)
         canteen = showcanteens(canteens, args.dmenu, args.search)
     else:
-        canteen = args.id[0]
+        canteen = args.ID[0]
     if canteen is not None and not args.search:
         meals = getmenu(canteen, args.closes_at)
         menu = formatmenu(meals)

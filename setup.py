@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setup(
     name='dmensamenu',
-    version='1.0.0',
+    version='1.1.1',
     description='Print canteen menus using dmenu and OpenMensa',
     long_description=long_description,
     url='https://github.com/dotlambda/dmensamenu',
