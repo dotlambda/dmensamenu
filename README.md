@@ -7,8 +7,8 @@ The menus are fetched from http://openmensa.org/.
 Requirements
 ------------
 
-Of course, this requires dmenu to be installed.
-If you wish to use it with something else like Rofi, send in a pull request.
+Dmensamenu is written in Python 3 and depends on [Requests](http://python-requests.org/).
+It also requires [dmenu](https://tools.suckless.org/dmenu/) to be installed.
 
 Installation
 ------------
@@ -22,14 +22,18 @@ Installation
 Usage
 -----
 
-    $ dmensamenu id
+    $ dmensamenu ID
 
-where *id* is the OpenMensa canteen ID.
+where *ID* is the OpenMensa canteen ID.
 If you don't know yours, just use `dmensamenu --search` and search for it.
 After pressing Return, the ID will be printed to stdout.
 
 You can even pass extra arguments to dmenu:
 
-    $ dmensamenu --dmenu "dmenu -l \$lines -nb \#101b2a -nf \#dcdccc -sb \#dcdccc -sf \#101b2a -fn 'Fira Mono'" 280 
+    $ dmensamenu --dmenu "dmenu -l \$lines -nb \#101b2a -nf \#dcdccc -sb \#dcdccc -sf \#101b2a -fn 'Fira Mono'" 281
+
+or replace dmenu by Rofi:
+
+    $ dmensamenu --dmenu "rofi -dmenu -i" --search --city Berlin
 
 See `dmensamenu --help` for all available options.
