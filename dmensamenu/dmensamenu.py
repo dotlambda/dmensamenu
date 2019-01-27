@@ -105,7 +105,7 @@ def main():
                              'The shell variable $lines will be set to the number of items on the menu '
                              'and $date will be set to the date of the menu displazed.')
     parser.add_argument('-v', '--version', action='version',
-                        version='dmensamenu-1.0.0', help="Show version number and exit.")
+                        version='dmensamenu-1.2.1', help="Show version number and exit.")
     parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
                         help='Show this help message and exit.')
     args = parser.parse_args()
