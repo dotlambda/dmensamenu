@@ -2,7 +2,7 @@ dmensamenu
 ==========
 
 Print canteen menus using `dmenu`.
-The menus are fetched from http://openmensa.org/.
+The menus are fetched from https://openmensa.org/.
 
 Requirements
 ------------
