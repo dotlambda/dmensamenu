@@ -13,8 +13,8 @@ def getmenu(canteen, closes_at):
 
     for day in days:
         if day['closed'] == False:
-            return requests.get('http://openmensa.org/api/v2/canteens/{}/days/{}/meals'.format(canteen, day['date'])).json()
-    return [] # no open day found
+            return day['date'], requests.get('http://openmensa.org/api/v2/canteens/{}/days/{}/meals'.format(canteen, day['date'])).json()
+    return None, [] # no open day found
 
 def formatmenu(meals):
     menu = []
@@ -38,9 +38,10 @@ def formatmenu(meals):
             meal[0] += ' ' * (maxcategorylen - len(meal[0]))
     return ['  '.join(meal) for meal in menu]
 
-def showmenu(menu, dmenu):
+def showmenu(date, menu, dmenu):
     env = os.environ.copy()
     env['lines'] = str(len(menu))
+    env['date'] = date
     p = Popen(dmenu, stdout=PIPE, stdin=PIPE, shell=True, env=env)
     selected, err = p.communicate(input=str.encode('\n'.join(menu)))
 
@@ -65,6 +66,7 @@ def getcanteens(ids=[], city=None):
 def showcanteens(canteens, dmenu, printid=False):
     env = os.environ.copy()
     env['lines'] = '0'
+    env['date'] = ''
     p = Popen(dmenu, stdout=PIPE, stdin=PIPE, shell=True, env=env)
     selected, err = p.communicate(input=str.encode('\n'.join(canteen['name'] for canteen in canteens)))
 
@@ -78,9 +80,9 @@ def showcanteens(canteens, dmenu, printid=False):
 def main():
     parser = argparse.ArgumentParser(description='Show today\'s canteen menu.', add_help=False)
     parser.add_argument('ID', type=int, nargs='*',
-                        help='Openmensa.org canteen ID.'
-                            +' If no ID is given, a menu for selecting from available canteens is shown.'
-                            +' If multiple IDs are given, only those will be available for selection.')
+                        help='Openmensa.org canteen ID. '
+                             'If no ID is given, a menu for selecting from available canteens is shown. '
+                             'If multiple IDs are given, only those will be available for selection.')
     parser.add_argument('-c', '--closes-at', metavar='hh:mm',
                         type=lambda string: datetime.strptime(string, '%H:%M'),
                         help='Show menu of the next open day after hh:mm.')
@@ -90,10 +92,11 @@ def main():
     parser.add_argument('--city',
                         help='When searching for a canteen, only show the ones from the city specified'
                             +' (case-insensitive).')
-    parser.add_argument('--dmenu', metavar='CMD', default='dmenu -i -l $lines',
-                        help='Command to execute instead of \'dmenu -i -l $lines\'.'
-                            +' Can be used to pass custom parameters to dmenu.'
-                            +' The shell variable $lines will be set to the number of items on the menu.')
+    parser.add_argument('--dmenu', metavar='CMD', default='dmenu -i -l "$lines" -p "$date"',
+                        help='Command to execute. '
+                             'Can be used to pass custom parameters to dmenu. '
+                             'The shell variable $lines will be set to the number of items on the menu '
+                             'and $date will be set to the date of the menu displazed.')
     parser.add_argument('-v', '--version', action='version',
                         version='dmensamenu-1.0.0', help="Show version number and exit.")
     parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
@@ -106,9 +109,9 @@ def main():
     else:
         canteen = args.ID[0]
     if canteen is not None and not args.search:
-        meals = getmenu(canteen, args.closes_at)
+        date, meals = getmenu(canteen, args.closes_at)
         menu = formatmenu(meals)
-        showmenu(menu, args.dmenu)
-    
+        showmenu(date, menu, args.dmenu)
+
 if __name__ == '__main__':
     main()
