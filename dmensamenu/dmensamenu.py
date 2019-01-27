@@ -77,6 +77,13 @@ def showcanteens(canteens, dmenu, printid=False):
                 print(canteen['id'])
             return canteen['id']
 
+def showerror(msg, dmenu):
+    env = os.environ.copy()
+    env['lines'] = '0'
+    env['date'] = ''
+    p = Popen(dmenu, stdin=PIPE, shell=True, env=env)
+    selected, err = p.communicate(input=str.encode(msg))
+
 def main():
     parser = argparse.ArgumentParser(description='Show today\'s canteen menu.', add_help=False)
     parser.add_argument('ID', type=int, nargs='*',
@@ -110,6 +117,8 @@ def main():
         canteen = args.ID[0]
     if canteen is not None and not args.search:
         date, meals = getmenu(canteen, args.closes_at)
+        if date is None:
+            showerror('No open day found', args.dmenu)
         menu = formatmenu(meals)
         showmenu(date, menu, args.dmenu)
 
