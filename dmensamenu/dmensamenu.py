@@ -119,6 +119,7 @@ def main():
         date, meals = getmenu(canteen, args.closes_at)
         if date is None:
             showerror('No open day found', args.dmenu)
+            return
         menu = formatmenu(meals)
         showmenu(date, menu, args.dmenu)
 
