@@ -81,7 +81,7 @@ def showerror(msg, dmenu):
     env = os.environ.copy()
     env['lines'] = '0'
     env['date'] = ''
-    p = Popen(dmenu, stdin=PIPE, shell=True, env=env)
+    p = Popen(dmenu, stdout=PIPE, stdin=PIPE, shell=True, env=env)
     selected, err = p.communicate(input=str.encode(msg))
 
 def main():
